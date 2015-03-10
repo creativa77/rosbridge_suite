@@ -91,7 +91,7 @@ class RosbridgeWebSocket(WebSocketHandler):
             except:
                 # proper error will be handled in the protocol class
                 self.protocol.incoming(message)
-         elif user_auth and not self.authenticated:
+        elif user_auth and not self.authenticated:
             try:
                 msg = json.loads(message)
                 if msg['op'] == 'auth':
@@ -109,7 +109,7 @@ class RosbridgeWebSocket(WebSocketHandler):
             except:
                 # proper error will be handled in the protocol class
                 self.protocol.incoming(message)
-       else:
+        else:
             # no authentication required
             self.protocol.incoming(message)
 
