@@ -35,6 +35,7 @@ import rospy
 import sys
 
 from rosauth.srv import Authentication
+from rosauth.srv import UserAuthentication
 
 from signal import signal, SIGINT, SIG_DFL
 from functools import partial
@@ -65,7 +66,7 @@ class RosbridgeWebSocket(WebSocketHandler):
         except Exception as exc:
             rospy.logerr("Unable to accept incoming connection.  Reason: %s", str(exc))
         rospy.loginfo("Client connected.  %d clients total.", clients_connected)
-        if authenticate:
+        if authenticate or user_auth:
             rospy.loginfo("Awaiting proper authentication...")
 
     def on_message(self, message):
@@ -96,7 +97,7 @@ class RosbridgeWebSocket(WebSocketHandler):
                 msg = json.loads(message)
                 if msg['op'] == 'auth':
                     # check the authorization information
-                    auth_srv = rospy.ServiceProxy('authenticate_user', UserAuthentication)
+                    auth_srv = rospy.ServiceProxy('/authenticate_user', UserAuthentication)
                     resp = auth_srv(msg['user'], msg['pass'])
                     self.authenticated = resp.authenticated
                     if self.authenticated:
